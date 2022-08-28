@@ -6,9 +6,9 @@ import typing as t
 from fastapi import Depends, FastAPI, status
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, delete, select, update
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 Base = declarative_base()
 

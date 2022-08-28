@@ -17,6 +17,17 @@ alembic upgrade head
 uvicorn api.main:app --reload --port 8080
 ```
 
+### Create a Migration
+
+```bash
+alembic revision --autogenerate -m "add/update ..."
+
+# make sure the migration was generated properly
+nvim ./alembic/versions/<revision>.py
+
+alembic upgrade head
+```
+
 ## SQLAlchemy Docs
 
 <https://docs.sqlalchemy.org/en/14/orm/queryguide.html>
@@ -31,4 +42,4 @@ uvicorn api.main:app --reload --port 8080
 - [x] edit and delete routes
 - [x] status codes
 - [ ] handle database errors better
-
+- [ ] add user table and create relations (many to many)

@@ -1,6 +1,7 @@
 import asyncio
-import asyncpg
 import datetime
+
+import asyncpg
 
 
 async def main():
