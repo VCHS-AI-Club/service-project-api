@@ -2,16 +2,13 @@
 # -*- coding=utf-8 -*-
 """Entry point for the api."""
 import typing as t
-from functools import lru_cache
-from uuid import UUID
 
-from fastapi import Depends, FastAPI
-from fastapi_utils.guid_type import GUID, GUID_DEFAULT_SQLITE
-from fastapi_utils.session import FastAPISessionMaker
+from fastapi import Depends, FastAPI, status
 from pydantic import BaseModel
-from sqlalchemy import Column, String
+from sqlalchemy import Column, Integer, String, delete, select, update
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 Base = declarative_base()
 
@@ -21,49 +18,86 @@ class Opp(Base):
 
     __tablename__ = "opps"
 
-    id = Column(GUID, primary_key=True, default=GUID_DEFAULT_SQLITE)  # noqa
+    id = Column(Integer, primary_key=True, index=True)  # noqa
     name = Column(String, nullable=False)
     desc = Column(String, nullable=False)
+
+
+class Tag(Base):
+    """Database representation of a tag."""
+
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True, index=True)  # noqa
+    name = Column(String, nullable=False)
 
 
 # Used to validate inputs on api routes
 class OppT(BaseModel):
     """Opportunity type."""
 
-    id: UUID  # noqa
+    # id: int  # noqa
     name: str
     desc: str
 
 
-def get_db() -> t.Iterator[Session]:
+CONNECTION_STRING = (
+    "postgresql+asyncpg://postgres:postgres@localhost/ai_service_project"
+)
+engine = create_async_engine(CONNECTION_STRING, echo=True)
+SessionLocal = sessionmaker(
+    engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+)
+
+
+async def get_db() -> t.AsyncIterator[AsyncSession]:
     """`FastAPI` dependency that provides a sqlalchemy session."""
-    yield from _get_fastapi_sessionmaker().get_db()
+    async with t.cast(AsyncSession, SessionLocal()) as session:
+        try:
+            yield session
+            await session.commit()
+        finally:
 
-
-@lru_cache()
-def _get_fastapi_sessionmaker() -> FastAPISessionMaker:
-    return FastAPISessionMaker("sqlite+pysqlite:///databasae.sqlite3")
+            await session.close()
 
 
 app = FastAPI()
 
 
-@app.get("/items/{id_}")
-async def get_item(db: Session = Depends(get_db), *, id_: UUID):
+@app.get("/items/{id}", status_code=status.HTTP_200_OK)
+async def get_item(id: int, db: AsyncSession = Depends(get_db)):  # noqa
     """Get an item."""
-    return db.query(Opp).get(id_)
+    return await db.get(Opp, id)
 
 
-@app.get("/items/")
-async def get_all_items(db: Session = Depends(get_db)):
+@app.get("/items/", status_code=status.HTTP_200_OK)
+async def get_all_items(db: AsyncSession = Depends(get_db)):
     """Get all items from the db."""
-    return db.query(Opp).all()
+    q = await db.execute(select(Opp).order_by(Opp.id))
+    return q.scalars().all()
 
 
-@app.post("/items/")
-async def create_item(opp: OppT, db: Session = Depends(get_db)):
+@app.post("/items/", status_code=status.HTTP_201_CREATED)
+async def create_item(opp: OppT, db: AsyncSession = Depends(get_db)):
     """Put an item."""
-    obj = Opp(id=opp.id, name=opp.name, desc=opp.desc)
+    obj = Opp(name=opp.name, desc=opp.desc)
     db.add(obj)
-    db.flush()
+    await db.flush()
     return obj
+
+
+@app.put("/items/{id}", status_code=status.HTTP_200_OK)
+async def edit_item(opp: OppT, id: int, db: AsyncSession = Depends(get_db)):  # noqa
+    """Edit an item."""
+    await db.execute(
+        update(Opp).where(Opp.id == id).values(name=opp.name, desc=opp.desc)
+    )
+    return await db.get(Opp, id)
+
+
+@app.delete("/items/{id}", status_code=status.HTTP_200_OK)
+async def delete_item(id: int, db: AsyncSession = Depends(get_db)):  # noqa
+    """Delete an item."""
+    await db.execute(delete(Opp).where(Opp.id == id))

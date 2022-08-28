@@ -7,5 +7,5 @@ def format_code(session: Session):
     session.install("isort", "-U")
     session.install("black", "-U")
 
-    session.run("isort", "ottbot")
-    session.run("black", "ottbot")
+    session.run("isort", ".")
+    session.run("black", ".")
