@@ -10,6 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+
 Base = declarative_base()
 
 
@@ -63,7 +66,17 @@ async def get_db() -> t.AsyncIterator[AsyncSession]:
             await session.close()
 
 
-app = FastAPI()
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_credentials=True,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+]
+
+app = FastAPI(middleware=middleware)
 
 
 @app.get("/items/{id}", status_code=status.HTTP_200_OK)
