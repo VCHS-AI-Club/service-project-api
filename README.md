@@ -41,5 +41,5 @@ alembic upgrade head
 - [x] add auto migrations <https://alembic.sqlalchemy.org/en/latest/autogenerate.html>
 - [x] edit and delete routes
 - [x] status codes
-- [ ] handle database errors better
+- [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 - [ ] add user table and create relations (many to many)
