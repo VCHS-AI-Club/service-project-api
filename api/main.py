@@ -5,16 +5,8 @@ import typing as t
 
 from fastapi import Depends, FastAPI, status
 from pydantic import BaseModel
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    delete,
-    select,
-    update,
-)
+from sqlalchemy import (Column, ForeignKey, Integer, String, Table, delete,
+                        select, update)
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -62,11 +54,17 @@ class User(Base):
 
 # Used to validate inputs on api routes
 class OppT(BaseModel):
-    """Opportunity type."""
+    """Opportunity validation schema."""
 
     # id: int  # noqa
     name: str
     desc: str
+
+
+class UserT(BaseModel):
+    """User validation schema."""
+
+    id: str  # noqa
 
 
 CONNECTION_STRING = (
@@ -122,7 +120,7 @@ async def create_item(opp: OppT, db: AsyncSession = Depends(get_db)):
     """Put an item."""
     obj = Opp(name=opp.name, desc=opp.desc)
     db.add(obj)
-    await db.flush()
+    # await db.flush()
     return obj
 
 
@@ -139,3 +137,11 @@ async def edit_item(opp: OppT, id: int, db: AsyncSession = Depends(get_db)):  # 
 async def delete_item(id: int, db: AsyncSession = Depends(get_db)):  # noqa
     """Delete an item."""
     await db.execute(delete(Opp).where(Opp.id == id))
+
+
+@app.post("/users/")
+def create_user(user: UserT, db: AsyncSession = Depends(get_db)):
+    """Create a user"""
+    u = User(id=user.id)
+    db.add(u)
+    return u

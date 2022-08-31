@@ -35,11 +35,16 @@ alembic upgrade head
 
 ## TODO
 
-- [x] fix sqlite complaining about thread safety => move to postgres <https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app>
+- [ ] get, create, update, delete users
+- [ ] get, create, update, delete tags
+- [ ] add tag to user, delete tag if no user has it
+
 - [ ] add real opportunity models
+- [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
+
+- [x] fix sqlite complaining about thread safety => move to postgres <https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app>
 - [x] fix absolute imports not working (if there is more than 1 file)
 - [x] add auto migrations <https://alembic.sqlalchemy.org/en/latest/autogenerate.html>
 - [x] edit and delete routes
 - [x] status codes
-- [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
-- [ ] add user table and create relations (many to many)
+- [x] add user table and create relations (many to many)
