@@ -42,6 +42,13 @@ alembic upgrade head
 - [ ] add real opportunity models
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 
+- [ ] refactor file if it gets too large
+  - [ ] main.py
+  - [ ] schemas.py
+  - [ ] models.py
+  - [ ] routers
+  - [ ] db.py
+
 - [x] fix sqlite complaining about thread safety => move to postgres <https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app>
 - [x] fix absolute imports not working (if there is more than 1 file)
 - [x] add auto migrations <https://alembic.sqlalchemy.org/en/latest/autogenerate.html>
