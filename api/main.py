@@ -5,11 +5,19 @@ import typing as t
 
 from fastapi import Depends, FastAPI, status
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String, delete, select, update
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    delete,
+    select,
+    update,
+)
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm import relationship, sessionmaker
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
@@ -26,6 +34,14 @@ class Opp(Base):
     desc = Column(String, nullable=False)
 
 
+association_table = Table(
+    "association",
+    Base.metadata,
+    Column("tag_id", ForeignKey("tags.id")),
+    Column("user_id", ForeignKey("users.id")),
+)
+
+
 class Tag(Base):
     """Database representation of a tag."""
 
@@ -33,6 +49,15 @@ class Tag(Base):
 
     id = Column(Integer, primary_key=True, index=True)  # noqa
     name = Column(String, nullable=False)
+
+
+class User(Base):
+    """Database representation of a user."""
+
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True)  # noqa
+    tags = relationship("Tag", secondary=association_table)
 
 
 # Used to validate inputs on api routes
