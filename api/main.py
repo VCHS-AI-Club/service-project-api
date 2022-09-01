@@ -5,8 +5,16 @@ import typing as t
 
 from fastapi import Depends, FastAPI, status
 from pydantic import BaseModel
-from sqlalchemy import (Column, ForeignKey, Integer, String, Table, delete,
-                        select, update)
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    delete,
+    select,
+    update,
+)
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -147,3 +155,17 @@ def create_user(user: UserT, db: AsyncSession = Depends(get_db)):
     u = User(id=user.id)
     db.add(u)
     return u
+
+
+@app.get("/users")
+async def get_all_uesrs(db: AsyncSession = Depends(get_db)):
+    """Get all users."""
+    q = await db.execute(select(User).order_by(User.id))
+    return q.scalars().all()
+
+
+@app.get("/tags")
+async def get_all_tags(db: AsyncSession = Depends(get_db)):
+    """Get all tags."""
+    q = await db.execute(select(Tag).order_by(Tag.id))
+    return q.scalars().all()
