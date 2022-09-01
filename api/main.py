@@ -108,19 +108,21 @@ async def get_item(id: int, db: AsyncSession = Depends(get_db)):  # noqa
     return await db.get(Opp, id)
 
 
-@app.get("/items/", status_code=status.HTTP_200_OK)
+@app.get("/items", status_code=status.HTTP_200_OK)
 async def get_all_items(db: AsyncSession = Depends(get_db)):
     """Get all items from the db."""
     q = await db.execute(select(Opp).order_by(Opp.id))
     return q.scalars().all()
 
 
-@app.post("/items/", status_code=status.HTTP_201_CREATED)
+@app.post("/items", status_code=status.HTTP_201_CREATED)
 async def create_item(opp: OppT, db: AsyncSession = Depends(get_db)):
     """Put an item."""
     obj = Opp(name=opp.name, desc=opp.desc)
     db.add(obj)
-    # await db.flush()
+    await db.commit()
+    await db.refresh(obj)
+
     return obj
 
 
@@ -139,7 +141,7 @@ async def delete_item(id: int, db: AsyncSession = Depends(get_db)):  # noqa
     await db.execute(delete(Opp).where(Opp.id == id))
 
 
-@app.post("/users/")
+@app.post("/users")
 def create_user(user: UserT, db: AsyncSession = Depends(get_db)):
     """Create a user"""
     u = User(id=user.id)

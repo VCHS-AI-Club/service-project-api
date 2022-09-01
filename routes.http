@@ -1,0 +1,23 @@
+GET http://localhost:8080/items
+
+POST http://localhost:8080/items
+Content-Type: application/json
+
+{
+    "name": "Task",
+    "desc": "asdfs fdsa"
+}
+
+PUT http://localhost:8080/items/7
+Content-Type: application/json
+
+{
+    "name": "new",
+    "desc": "also new"
+}
+
+DELETE http://localhost:8080/items/4
+
+###
+
+GET http://localhost:8080/users
