@@ -22,6 +22,44 @@ DELETE http://localhost:8080/items/4
 
 GET http://localhost:8080/users
 
+GET http://localhost:8080/users/asdf
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "id": "asdf"
+}
+
+PUT http://localhost:8080/users/7
+Content-Type: application/json
+
+{
+    "name": "new",
+    "desc": "also new"
+}
+
+DELETE http://localhost:8080/users/4
+
 ###
 
 GET http://localhost:8080/tags
+
+GET http://localhost:8080/tags/1
+
+POST http://localhost:8080/tags
+Content-Type: application/json
+
+
+{
+    "name": "technology"
+}
+
+PUT http://localhost:8080/tags
+
+{
+    "id": 1,
+    "name": "tech"
+}
+
+DELETE http://localhost:8080/tags/1
