@@ -16,7 +16,7 @@ Content-Type: application/json
     "desc": "also new"
 }
 
-DELETE http://localhost:8080/items/4
+DELETE http://localhost:8080/items/7
 
 ###
 
@@ -28,18 +28,17 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "asdf"
+  "id": "asdfsda"
 }
 
-PUT http://localhost:8080/users/7
+PUT http://localhost:8080/users/asdfsda
 Content-Type: application/json
 
 {
-    "name": "new",
-    "desc": "also new"
+  "id": "a"
 }
 
-DELETE http://localhost:8080/users/4
+DELETE http://localhost:8080/users/a
 
 ###
 
@@ -55,11 +54,13 @@ Content-Type: application/json
     "name": "technology"
 }
 
-PUT http://localhost:8080/tags
+PUT http://localhost:8080/tags/1
+Content-Type: application/json
 
 {
-    "id": 1,
     "name": "tech"
 }
 
 DELETE http://localhost:8080/tags/1
+
+

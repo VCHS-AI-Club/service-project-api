@@ -35,21 +35,22 @@ alembic upgrade head
 
 ## TODO
 
-- [ ] get, create, update, delete users
-- [ ] get, create, update, delete tags
 - [ ] add tag to user, delete tag if no user has it
 
 - [ ] add real opportunity models
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 
-- [ ] refactor file if it gets too large
-  - [ ] main.py
-  - [ ] schemas.py
-  - [ ] models.py
-  - [ ] routers
-  - [ ] db.py
+- [x] get, create, update, delete users
+- [x] get, create, update, delete tags
 
-- [ ] add routes to routes.http (automatically)
+- [x] refactor file if it gets too large
+  - [x] main.py
+  - [x] schemas.py
+  - [x] models.py
+  - [x] routers
+  - [x] db.py
+
+- [x] add routes to routes.http ~~(automatically)~~
 
 - [x] fix sqlite complaining about thread safety => move to postgres <https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app>
 - [x] fix absolute imports not working (if there is more than 1 file)
