@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 from sqlalchemy import (
     Column,
@@ -21,6 +22,12 @@ class Opp(Base):
     id = Column(Integer, primary_key=True, index=True)  # noqa
     name = Column(String, nullable=False)
     desc = Column(String, nullable=False)
+    # Location
+    lat = Column(Integer, nullable=False)
+    lon = Column(Integer, nullable=False)
+    # Start and end times as UTC timestamps
+    start = Column(Integer, nullable=False)
+    end = Column(Integer, nullable=False)
 
 
 association_table = Table(
