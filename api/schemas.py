@@ -1,15 +1,9 @@
 from datetime import datetime
+
 from pydantic import BaseModel
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-)
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
 
 Base = declarative_base()
 
@@ -22,29 +16,12 @@ class Opp(Base):
     id = Column(Integer, primary_key=True, index=True)  # noqa
     name = Column(String, nullable=False)
     desc = Column(String, nullable=False)
-    # Location
-    lat = Column(Integer, nullable=False)
-    lon = Column(Integer, nullable=False)
+    # Location as lat long coordinates
+    lat = Column(Float, nullable=False)
+    lon = Column(Float, nullable=False)
     # Start and end times as UTC timestamps
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
-
-
-association_table = Table(
-    "association",
-    Base.metadata,
-    Column("tag_id", ForeignKey("tags.id")),
-    Column("user_id", ForeignKey("users.id")),
-)
-
-
-class Tag(Base):
-    """Database representation of a tag."""
-
-    __tablename__ = "tags"
-
-    id = Column(Integer, primary_key=True, index=True)  # noqa
-    name = Column(String, nullable=False)
 
 
 class User(Base):
@@ -53,7 +30,6 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True)  # noqa
-    tags = relationship("Tag", secondary=association_table)
 
 
 # Used to validate inputs on api routes
@@ -63,15 +39,13 @@ class OppT(BaseModel):
     # id: int  # noqa
     name: str
     desc: str
+    lat: float
+    lon: float
+    start: int
+    end: int
 
 
 class UserT(BaseModel):
     """User validation schema."""
 
     id: str  # noqa
-
-
-class TagT(BaseModel):
-    """Tag validation schema."""
-
-    name: str

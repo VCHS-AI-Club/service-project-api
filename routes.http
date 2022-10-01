@@ -1,22 +1,30 @@
-GET http://localhost:8080/items
+GET http://localhost:8080/opps
 
-POST http://localhost:8080/items
+POST http://localhost:8080/opps
 Content-Type: application/json
 
 {
     "name": "Task",
-    "desc": "asdfs fdsa"
+    "desc": "asdfs fdsa",
+    "lat": -122.0,
+    "lon": 37.1,
+    "start": 1664607148,
+    "end": 1664607158
 }
 
-PUT http://localhost:8080/items/7
+PUT http://localhost:8080/opps/13
 Content-Type: application/json
 
 {
-    "name": "new",
-    "desc": "also new"
+    "name": "Updated Task",
+    "desc": "asdfs fdsa",
+    "lat": -122.0,
+    "lon": 37.1,
+    "start": 1664607148,
+    "end": 1664607158
 }
 
-DELETE http://localhost:8080/items/7
+DELETE http://localhost:8080/opps/7
 
 ###
 
@@ -39,28 +47,5 @@ Content-Type: application/json
 }
 
 DELETE http://localhost:8080/users/a
-
-###
-
-GET http://localhost:8080/tags
-
-GET http://localhost:8080/tags/1
-
-POST http://localhost:8080/tags
-Content-Type: application/json
-
-
-{
     "name": "technology"
 }
-
-PUT http://localhost:8080/tags/1
-Content-Type: application/json
-
-{
-    "name": "tech"
-}
-
-DELETE http://localhost:8080/tags/1
-
-

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
 
-from api.schemas import UserT, User
 from api.db import get_db
+from api.schemas import User, UserT
 
 user_router = APIRouter(prefix="/users")
 
@@ -32,21 +32,21 @@ async def get_user(id: str, db: AsyncSession = Depends(get_db)):
 @user_router.post("")
 async def create_uesr(user: UserT, db: AsyncSession = Depends(get_db)):
     """Create a user."""
-    obj = User(id=user.id)
+    obj = User(**dict(user))
     db.add(obj)
     await db.commit()
     await db.refresh(obj)
 
     return obj
 
+
 @user_router.put("/{id}")
 async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):
     """Edit a user."""
-    await db.execute(
-        update(User).where(User.id == id).values(id=user.id)
-    )
+    await db.execute(update(User).where(User.id == id).values(**dict(user)))
     await db.commit()
     return await db.get(User, user.id)
+
 
 @user_router.delete("/{id}")
 async def delete_user(id: str, db: AsyncSession = Depends(get_db)):
