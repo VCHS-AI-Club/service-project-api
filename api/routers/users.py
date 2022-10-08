@@ -10,7 +10,7 @@ user_router = APIRouter(prefix="/users")
 
 @user_router.post("")
 def create_user(user: UserT, db: AsyncSession = Depends(get_db)):
-    """Create a user"""
+    """Create a user."""
     u = User(id=user.id)
     db.add(u)
     return u
@@ -24,7 +24,7 @@ async def get_all_uesrs(db: AsyncSession = Depends(get_db)):
 
 
 @user_router.get("/{id}")
-async def get_user(id: str, db: AsyncSession = Depends(get_db)):
+async def get_user(id: str, db: AsyncSession = Depends(get_db)):  # noqa
     """Get a user by id."""
     return await db.get(User, id)
 
@@ -41,14 +41,15 @@ async def create_uesr(user: UserT, db: AsyncSession = Depends(get_db)):
 
 
 @user_router.put("/{id}")
-async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):
+async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):  # noqa
     """Edit a user."""
-    await db.execute(update(User).where(User.id == id).values(**dict(user)))
+    # await db.execute(update(User).where(User.id == id).values(**dict(user)))
+    await db.merge(User(**dict(user)))
     await db.commit()
     return await db.get(User, user.id)
 
 
 @user_router.delete("/{id}")
-async def delete_user(id: str, db: AsyncSession = Depends(get_db)):
+async def delete_user(id: str, db: AsyncSession = Depends(get_db)):  # noqa
     """Delete a user."""
     await db.execute(delete(User).where(User.id == id))

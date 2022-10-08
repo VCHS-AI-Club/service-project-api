@@ -1,6 +1,6 @@
-GET http://localhost:8080/opps
+GET http://localhost:8000/opps
 
-POST http://localhost:8080/opps
+POST http://localhost:8000/opps
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
     "end": 1664607158
 }
 
-PUT http://localhost:8080/opps/13
+PUT http://localhost:8000/opps/13
 Content-Type: application/json
 
 {
@@ -24,28 +24,29 @@ Content-Type: application/json
     "end": 1664607158
 }
 
-DELETE http://localhost:8080/opps/7
+DELETE http://localhost:8000/opps/7
 
 ###
 
-GET http://localhost:8080/users
+GET http://localhost:8000/users
 
-GET http://localhost:8080/users/asdf
+GET http://localhost:8000/users/asdf
 
-POST http://localhost:8080/users
+POST http://localhost:8000/users
 Content-Type: application/json
 
 {
   "id": "asdf"
 }
 
-PUT http://localhost:8080/users/asdfsda
+PATCH http://localhost:8000/users/asdf
 Content-Type: application/json
 
 {
-  "id": "a"
+  "id": "asdf",
+  "teaching": false
 }
 
-DELETE http://localhost:8080/users/a
+DELETE http://localhost:8000/users/a
     "name": "technology"
 }

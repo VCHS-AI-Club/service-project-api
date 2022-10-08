@@ -35,6 +35,7 @@ alembic upgrade head
 
 ## TODO
 
+- [ ] switch PUT routes to PATCH
 - [ ] add real opportunity models
 - [ ] switch unix timestamps to postgres's TIMESTAMPZ
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>

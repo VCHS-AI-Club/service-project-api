@@ -1,9 +1,6 @@
-from datetime import datetime
-
 from pydantic import BaseModel
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Table
+from sqlalchemy import Boolean, Column, Float, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -36,12 +33,13 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True)  # noqa
-    # children
-    # setup / labor
-    # tech / AV
-    # teaching
-    # food
-    # environment / public space cleanup
+
+    children = Column(Boolean, nullable=True)
+    setup_labor = Column(Boolean, nullable=True)
+    audio_visual = Column(Boolean, nullable=True)
+    teaching = Column(Boolean, nullable=True)
+    food = Column(Boolean, nullable=True)
+    environment = Column(Boolean, nullable=True)
 
 
 # Used to validate inputs on api routes
@@ -64,3 +62,10 @@ class UserT(BaseModel):
     """User validation schema."""
 
     id: str  # noqa
+    children: bool | None
+    setup_labor: bool | None
+    audio_visual: bool | None
+    teaching: bool | None
+    food: bool | None
+    environment: bool | None
+    children: bool | None
