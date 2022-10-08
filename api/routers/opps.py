@@ -35,9 +35,7 @@ async def create_opp(opp: OppT, db: AsyncSession = Depends(get_db)):
 @opp_router.put("/{id}", status_code=status.HTTP_200_OK)
 async def edit_opp(opp: OppT, id: int, db: AsyncSession = Depends(get_db)):  # noqa
     """Edit an opp."""
-    await db.execute(
-        update(Opp).where(Opp.id == id).values(**dict(opp))
-    )
+    await db.execute(update(Opp).where(Opp.id == id).values(**dict(opp)))
     return await db.get(Opp, id)
 
 
