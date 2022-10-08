@@ -35,15 +35,17 @@ alembic upgrade head
 
 ## TODO
 
-- [ ] add tag to user, delete tag if no user has it
-
 - [ ] add real opportunity models
+- [ ] switch unix timestamps to postgres's TIMESTAMPZ
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 
-- [x] get, create, update, delete users
-- [x] get, create, update, delete tags
+### Done
 
+- [x] get, create, update, delete users
+
+- [x] get, create, update, delete tags
 - [x] refactor file if it gets too large
+
   - [x] main.py
   - [x] schemas.py
   - [x] models.py
