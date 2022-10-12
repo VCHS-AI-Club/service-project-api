@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from sqlalchemy import Boolean, Column, Float, Integer, String
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -26,6 +27,10 @@ class Opp(Base):
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
 
+    users = relationship(
+        "User", secondary="user_opp_association", back_populates="opps"
+    )
+
 
 class User(Base):
     """Database representation of a user."""
@@ -40,6 +45,22 @@ class User(Base):
     teaching = Column(Boolean, nullable=True)
     food = Column(Boolean, nullable=True)
     environment = Column(Boolean, nullable=True)
+
+    opps = relationship(
+        "Opp",
+        secondary="user_opp_association",
+        back_populates="users",
+    )
+
+
+class UserOppAssociation(Base):
+    """Many to many association table for `Opp` <-> `User` relationship."""
+
+    __tablename__ = "user_opp_association"
+
+    id = Column(Integer, primary_key=True)  # noqa
+    user_id = Column(String, ForeignKey("users.id"))
+    opp_id = Column(Integer, ForeignKey("opps.id"))
 
 
 # Used to validate inputs on api routes

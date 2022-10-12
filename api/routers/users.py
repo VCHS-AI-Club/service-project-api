@@ -3,7 +3,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.db import get_db
-from api.schemas import User, UserT
+from api.schemas import Opp, OppT, User, UserT
 
 user_router = APIRouter(prefix="/users")
 
@@ -47,6 +47,13 @@ async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):  
     await db.merge(User(**dict(user)))
     await db.commit()
     return await db.get(User, user.id)
+
+
+@user_router.post("/{id}/opp")
+async def add_opp(opp: OppT, id: str, db: AsyncSession = Depends(get_db)):  # noqa
+    """Add an opp to a user."""
+    ...
+    # TODO: impliment
 
 
 @user_router.delete("/{id}")
