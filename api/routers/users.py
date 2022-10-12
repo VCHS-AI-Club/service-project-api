@@ -49,11 +49,16 @@ async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):  
     return await db.get(User, user.id)
 
 
-@user_router.post("/{id}/opp")
-async def add_opp(opp: OppT, id: str, db: AsyncSession = Depends(get_db)):  # noqa
+@user_router.post("/{user_id}/{opp_id}")
+async def add_opp(
+    user_id: str, opp_id: int, db: AsyncSession = Depends(get_db)
+):  # noqa
     """Add an opp to a user."""
-    ...
-    # TODO: impliment
+
+    # q = await db.execute(select(User).where(User.id == user_id))
+    # user = q.scalars().all()
+    # user.opps.append(Opp(id=opp_id))
+    # TODO: figure this out
 
 
 @user_router.delete("/{id}")
