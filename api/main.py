@@ -6,8 +6,8 @@ from fastapi import FastAPI
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
-from api.routers.opps import opp_router
-from api.routers.users import user_router
+from api.routers.opp import opp_router
+from api.routers.user import user_router
 
 middleware = [
     Middleware(

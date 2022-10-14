@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.db import get_db
 from api.schemas import Opp, OppT
 
-opp_router = APIRouter(prefix="/opps")
+opp_router = APIRouter(prefix="/opp")
 
 
 @opp_router.get("/{id}", status_code=status.HTTP_200_OK)

@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import delete, select, update
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from api.db import get_db
-from api.schemas import Opp, OppT, User, UserT
+from api.schemas import AssociationT, Opp, OppT, User, UserOppAssociation, UserT
 
-user_router = APIRouter(prefix="/users")
+user_router = APIRouter(prefix="/user")
 
 
 @user_router.post("")
@@ -30,7 +31,7 @@ async def get_user(id: str, db: AsyncSession = Depends(get_db)):  # noqa
 
 
 @user_router.post("")
-async def create_uesr(user: UserT, db: AsyncSession = Depends(get_db)):
+async def create_uesr(user: UserT, db: AsyncSession = Depends(get_db)) -> User:
     """Create a user."""
     obj = User(**dict(user))
     db.add(obj)
@@ -49,19 +50,33 @@ async def edit_user(user: UserT, id: str, db: AsyncSession = Depends(get_db)):  
     return await db.get(User, user.id)
 
 
-@user_router.post("/{user_id}/{opp_id}")
-async def add_opp(
-    user_id: str, opp_id: int, db: AsyncSession = Depends(get_db)
-):  # noqa
-    """Add an opp to a user."""
-
-    # q = await db.execute(select(User).where(User.id == user_id))
-    # user = q.scalars().all()
-    # user.opps.append(Opp(id=opp_id))
-    # TODO: figure this out
-
-
 @user_router.delete("/{id}")
 async def delete_user(id: str, db: AsyncSession = Depends(get_db)):  # noqa
     """Delete a user."""
     await db.execute(delete(User).where(User.id == id))
+
+
+@user_router.get("/{id}/opps")
+async def get_user_opps(
+    id: str,  # noqa
+    db: AsyncSession = Depends(get_db),
+) -> list[Opp]:
+    """Get the opps that a user joined."""
+    # user = await db.get(User, id)
+
+    # return user.opps
+
+    res = await db.execute(
+        select(User).where(User.id == id).options(selectinload(User.opps))
+    )
+    return res.scalar().opps
+
+
+@user_router.post("/opp")
+async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noqa
+    """Add an opp to a user."""
+    obj = UserOppAssociation.insert().values(
+        user_id=asc.user_id,
+        opp_id=asc.opp_id,
+    )
+    await db.execute(obj)

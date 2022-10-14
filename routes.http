@@ -1,18 +1,19 @@
-GET http://localhost:8000/opps
+GET http://localhost:8000/opp
 
-POST http://localhost:8000/opps
+POST http://localhost:8000/opp
 Content-Type: application/json
 
 {
     "name": "Task",
     "desc": "asdfs fdsa",
+    "isChurch": false,
     "lat": -122.0,
     "lon": 37.1,
     "start": 1664607148,
     "end": 1664607158
 }
 
-PUT http://localhost:8000/opps/13
+PUT http://localhost:8000/opp/13
 Content-Type: application/json
 
 {
@@ -24,22 +25,22 @@ Content-Type: application/json
     "end": 1664607158
 }
 
-DELETE http://localhost:8000/opps/7
+DELETE http://localhost:8000/opp/7
 
 ###
 
-GET http://localhost:8000/users
+GET http://localhost:8000/user
 
-GET http://localhost:8000/users/asdf
+GET http://localhost:8000/user/asdf
 
-POST http://localhost:8000/users
+POST http://localhost:8000/user
 Content-Type: application/json
 
 {
   "id": "asdf"
 }
 
-PATCH http://localhost:8000/users/asdf
+PATCH http://localhost:8000/user/asdf
 Content-Type: application/json
 
 {
@@ -47,6 +48,18 @@ Content-Type: application/json
   "teaching": false
 }
 
-DELETE http://localhost:8000/users/a
+DELETE http://localhost:8000/user/a
+Content-Type: application/json
+{
     "name": "technology"
 }
+
+POST http://localhost:8000/user/opp
+Content-Type: application/json
+
+{
+  "user_id": "asdf",
+  "opp_id": 2
+}
+
+GET http://localhost:8000/user/asdf/opps
