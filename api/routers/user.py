@@ -62,21 +62,19 @@ async def get_user_opps(
     db: AsyncSession = Depends(get_db),
 ) -> list[Opp]:
     """Get the opps that a user joined."""
-    # user = await db.get(User, id)
-
-    # return user.opps
-
-    res = await db.execute(
-        select(User).where(User.id == id).options(selectinload(User.opps))
-    )
-    return res.scalar().opps
+    user: User
+    user = (
+        await db.execute(
+            select(User).where(User.id == id).options(selectinload(User.opps))
+        )
+    ).fetchone()[0]
+    return user.opps
 
 
 @user_router.post("/opp")
 async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noqa
     """Add an opp to a user."""
-    obj = UserOppAssociation.insert().values(
-        user_id=asc.user_id,
-        opp_id=asc.opp_id,
-    )
-    await db.execute(obj)
+    await db.merge(UserOppAssociation(user_id=asc.user_id, opp_id=asc.opp_id))
+    # asc = UserOppAssociation(user_id=asc.user_id, opp_id=asc.opp_id)
+    # print(asc)
+    # await db.merge(asc)

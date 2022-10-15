@@ -28,6 +28,20 @@ nvim ./alembic/versions/<revision>.py
 alembic upgrade head
 ```
 
+Reset database
+
+```bash
+sql# DROP TABLE "user" CASCADE;
+DROP TABLE opp CASCADE;
+DROP TABLE user_opp_association CASCADE;
+DROP TABLE alembic_version;
+
+rm -rf alembic/versions/*
+
+alembic revision --autogenerate -m "init"
+alembic upgrade head
+```
+
 ## SQLAlchemy Docs
 
 <https://docs.sqlalchemy.org/en/14/orm/queryguide.html>

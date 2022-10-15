@@ -27,6 +27,14 @@ Content-Type: application/json
 
 DELETE http://localhost:8000/opp/7
 
+POST http://localhost:8000/opp/1/rate
+Content-Type: application/json
+
+{
+  "user_id": "asdf",
+  "rating": 2
+}
+
 ###
 
 GET http://localhost:8000/user
@@ -59,7 +67,7 @@ Content-Type: application/json
 
 {
   "user_id": "asdf",
-  "opp_id": 2
+  "opp_id": 1
 }
 
 GET http://localhost:8000/user/asdf/opps

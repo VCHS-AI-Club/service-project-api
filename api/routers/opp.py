@@ -52,10 +52,11 @@ async def rate_opp(
     db: AsyncSession = Depends(get_db),
 ):
     """Rate an opp."""
-    asc = await db.get(
-        UserOppAssociation,
-        {"user_id": rating.user_id, "opp_id": id},
+    await db.execute(
+        update(UserOppAssociation)
+        .where(
+            UserOppAssociation.user_id == rating.user_id
+            and UserOppAssociation.opp_id == id
+        )
+        .values(rating=rating.rating)
     )
-    if 0 <= rating.rating <= 5:
-        asc.rating = rating.rating
-        await db.merge(asc)
