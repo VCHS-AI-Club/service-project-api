@@ -9,8 +9,9 @@ Base = declarative_base()
 UserOppAssociation = Table(
     "user_opp_association",
     Base.metadata,
-    Column("user_id", ForeignKey("user.id")),
-    Column("opp_id", ForeignKey("opp.id")),
+    Column("user_id", ForeignKey("user.id"), nullable=False, primary_key=True),
+    Column("opp_id", ForeignKey("opp.id"), nullable=False, primary_key=True),
+    Column("rating", Integer),
 )
 
 
@@ -64,16 +65,6 @@ class User(Base):
     )
 
 
-# class UserOppAssociation(Base):
-#     """Many to many association table for `Opp` <-> `User` relationship."""
-#
-#     __tablename__ = "user_opp_association"
-#
-#     id = Column(Integer, primary_key=True)  # noqa
-#     user_id = Column(String, ForeignKey("users.id"))
-#     opp_id = Column(Integer, ForeignKey("opps.id"))
-
-
 # Used to validate inputs on api routes
 class OppT(BaseModel):
     """Opportunity validation schema."""
@@ -108,3 +99,9 @@ class AssociationT(BaseModel):
 
     user_id: str
     opp_id: int
+
+class RatingT(BaseModel):
+    """Rating type."""
+
+    user_id: str
+    rating: int

@@ -3,7 +3,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.db import get_db
-from api.schemas import Opp, OppT
+from api.schemas import Opp, OppT, RatingT, UserOppAssociation
 
 opp_router = APIRouter(prefix="/opp")
 
@@ -43,3 +43,19 @@ async def edit_opp(opp: OppT, id: int, db: AsyncSession = Depends(get_db)):  # n
 async def delete_opp(id: int, db: AsyncSession = Depends(get_db)):  # noqa
     """Delete an opp."""
     await db.execute(delete(Opp).where(Opp.id == id))
+
+
+@opp_router.post("/{id}/rate")
+async def rate_opp(
+    rating: RatingT,
+    id: int,  # noqa
+    db: AsyncSession = Depends(get_db),
+):
+    """Rate an opp."""
+    asc = await db.get(
+        UserOppAssociation,
+        {"user_id": rating.user_id, "opp_id": id},
+    )
+    if 0 <= rating.rating <= 5:
+        asc.rating = rating.rating
+        await db.merge(asc)
