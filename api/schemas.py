@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Table
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, relationship
 
 Base = declarative_base()
 
@@ -16,7 +17,7 @@ Base = declarative_base()
 class UserOppAssociation(Base):
     """Association object for user <-> opp relationship.
 
-    See https://docs.sqlalchemy.org/en/15/orm/basic_relationships.html#association-object
+    See https://docs.sqlalchemy.org/en/14/orm/extensions/associationproxy.html?highlight=associationproxy#module-sqlalchemy.ext.associationproxy
     """
 
     __tablename__ = "user_opp_association"
@@ -24,8 +25,9 @@ class UserOppAssociation(Base):
     user_id = Column(ForeignKey("user.id"), primary_key=True)
     opp_id = Column(ForeignKey("opp.id"), primary_key=True)
     rating = Column(Integer)
-    user = relationship("User", back_populates="opps")
-    opp = relationship("Opp", back_populates="users")
+
+    user = relationship("User", back_populates="opp_association")
+    opp = relationship("Opp", back_populates="user_association")
 
 
 class User(Base):
@@ -42,12 +44,11 @@ class User(Base):
     food = Column(Boolean, nullable=True)
     environment = Column(Boolean, nullable=True)
 
-    opps: "list[Opp]" = relationship("UserOppAssociation", back_populates="user")
-    # opps = relationship(
-    #     "Opp",
-    #     secondary=UserOppAssociation,
-    #     back_populates="users",
-    # )
+    opp_association = relationship("UserOppAssociation", back_populates="user")
+    opps: "list[Opp]" = association_proxy(
+        "opp_association",
+        "opp",
+    )
 
 
 class Opp(Base):
@@ -71,12 +72,8 @@ class Opp(Base):
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
 
-    users = relationship("UserOppAssociation", back_populates="opp")
-    # users = relationship(
-    #     "User",
-    #     secondary=UserOppAssociation,
-    #     back_populates="opps",
-    # )
+    user_association = relationship("UserOppAssociation", back_populates="opp")
+    users = association_proxy("user_association", "user")
 
 
 # Used to validate inputs on api routes
@@ -94,6 +91,9 @@ class OppT(BaseModel):
     start: int
     end: int
 
+    class Config:
+        orm_mode = True
+
 
 class UserT(BaseModel):
     """User validation schema."""
@@ -107,12 +107,18 @@ class UserT(BaseModel):
     environment: bool | None
     children: bool | None
 
+    class Config:
+        orm_mode = True
+
 
 class AssociationT(BaseModel):
     """Association request type."""
 
     user_id: str
     opp_id: int
+
+    class Config:
+        orm_mode = True
 
 
 class RatingT(BaseModel):

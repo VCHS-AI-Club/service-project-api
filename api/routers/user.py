@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from api.db import get_db
-from api.schemas import AssociationT, Opp, OppT, User, UserOppAssociation, UserT
+from api.schemas import (AssociationT, Opp, OppT, User, UserOppAssociation,
+                         UserT)
 
 user_router = APIRouter(prefix="/user")
 
@@ -62,14 +63,19 @@ async def get_user_opps(
     db: AsyncSession = Depends(get_db),
 ) -> list[Opp]:
     """Get the opps that a user joined."""
+
     user: User
     user = (
         await db.execute(
-            select(User).where(User.id == id).options(selectinload(User.opps))
+            select(User)
+            .where(User.id == id)
+            .options(
+                selectinload(User.opp_association)
+                .subqueryload(UserOppAssociation.opp),
+            )
         )
-    ).fetchone()[0]
-    return user.opps
-
+    ).scalar()
+    # TODO: Fix recursion error: change assoc_proxy to viewonly relationship
 
 @user_router.post("/opp")
 async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noqa
