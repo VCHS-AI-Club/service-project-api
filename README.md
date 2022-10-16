@@ -49,6 +49,12 @@ alembic upgrade head
 
 ## TODO
 
+### URGENT
+
+- [ ] Fix schema recursion error ./api/routers/user.py:78
+
+### Current
+
 - [ ] switch PUT routes to PATCH
 - [ ] add real opportunity models
 - [ ] switch unix timestamps to postgres's TIMESTAMPZ
