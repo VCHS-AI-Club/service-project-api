@@ -54,9 +54,7 @@ async def rate_opp(
     """Rate an opp."""
     await db.execute(
         update(UserOppAssociation)
-        .where(
-            UserOppAssociation.user_id == rating.user_id
-            and UserOppAssociation.opp_id == id
-        )
+        .where(UserOppAssociation.user_id == rating.user_id)
+        .where(UserOppAssociation.opp_id == id)
         .values(rating=rating.rating)
     )

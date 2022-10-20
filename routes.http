@@ -62,12 +62,12 @@ Content-Type: application/json
     "name": "technology"
 }
 
-POST http://localhost:8000/user/opp
+POST http://localhost:8000/opp/1/rate
 Content-Type: application/json
 
 {
   "user_id": "asdf",
-  "opp_id": 1
+  "rating": 1
 }
 
 GET http://localhost:8000/user/asdf/opps
