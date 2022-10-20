@@ -94,7 +94,7 @@ async def get_user_opps(
 
 
 @user_router.get("/{id}/inverse_opps")
-async def get_user_opps(
+async def get_user_inverse_opps(
     id: str,  # noqa
     db: AsyncSession = Depends(get_db),
 ):
@@ -102,13 +102,20 @@ async def get_user_opps(
 
     inverse_opp_associations = (
         await db.execute(
-            select(UserOppAssociation)
-            .where(UserOppAssociation.user_id != id)
-            .options(selectinload(UserOppAssociation.opp))
-            .distinct(UserOppAssociation.opp_id)
+            select(Opp).where(
+                Opp.id.not_in(
+                    (await db.execute(
+                        select(UserOppAssociation.opp_id).where(
+                            UserOppAssociation.user_id == id
+                        )
+                    )).scalars()
+                )
+            )
+            # .options(selectinload(UserOppAssociation.opp))
+            # .distinct(UserOppAssociatopp_idn.opp_id)
         )
     ).scalars()
-    return [i.opp for i in inverse_opp_associations]
+    return [i.id for i in inverse_opp_associations]
 
 
 @user_router.post("/opp")

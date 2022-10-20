@@ -71,6 +71,8 @@ Content-Type: application/json
 }
 
 GET http://localhost:8000/user/asdf/opps
-
+GET http://localhost:8000/user/cl7k1si8s0049kcpnzvou9sfk/opps
 
 GET http://localhost:8000/user/asdf/inverse_opps
+GET http://localhost:8000/user/cl7k1si8s0049kcpnzvou9sfk/inverse_opps
+
