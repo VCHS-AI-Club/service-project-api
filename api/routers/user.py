@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import joinedload, selectinload
 
 from api.db import get_db
-from api.schemas import (AssociationT, Opp, OppT, User, UserOppAssociation,
-                         UserT)
+from api.schemas import AssociationT, Opp, OppT, User, UserOppAssociation, UserT
 
 user_router = APIRouter(prefix="/user")
 
@@ -61,7 +60,7 @@ async def delete_user(id: str, db: AsyncSession = Depends(get_db)):  # noqa
 async def get_user_opps(
     id: str,  # noqa
     db: AsyncSession = Depends(get_db),
-) -> list[Opp]:
+):
     """Get the opps that a user joined."""
 
     user: User
@@ -70,12 +69,29 @@ async def get_user_opps(
             select(User)
             .where(User.id == id)
             .options(
-                selectinload(User.opp_association)
-                .subqueryload(UserOppAssociation.opp),
+                selectinload(User.opp_association).subqueryload(UserOppAssociation.opp),
             )
         )
     ).scalar()
+    print(user.opps)
     # TODO: Fix recursion error: change assoc_proxy to viewonly relationship
+    return [
+        {
+            "name": o.name,
+            "id": o.id,
+            "desc": o.desc,
+            "isChurch": o.isChurch,
+            "contact": o.contact,
+            "website": o.website,
+            "lat": o.lat,
+            "lon": o.lon,
+            "start": o.start,
+            "end": o.end,
+            "rating": a.rating,
+        }
+        for o, a in zip(user.opps, user.opp_association)
+    ]
+
 
 @user_router.post("/opp")
 async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noqa
