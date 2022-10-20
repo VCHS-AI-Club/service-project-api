@@ -71,3 +71,6 @@ Content-Type: application/json
 }
 
 GET http://localhost:8000/user/asdf/opps
+
+
+GET http://localhost:8000/user/asdf/inverse_opps

@@ -93,6 +93,24 @@ async def get_user_opps(
     ]
 
 
+@user_router.get("/{id}/inverse_opps")
+async def get_user_opps(
+    id: str,  # noqa
+    db: AsyncSession = Depends(get_db),
+):
+    """Get the opps that a user has not joined."""
+
+    inverse_opp_associations = (
+        await db.execute(
+            select(UserOppAssociation)
+            .where(UserOppAssociation.user_id != id)
+            .options(selectinload(UserOppAssociation.opp))
+            .distinct(UserOppAssociation.opp_id)
+        )
+    ).scalars()
+    return [i.opp for i in inverse_opp_associations]
+
+
 @user_router.post("/opp")
 async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noqa
     """Add an opp to a user."""
