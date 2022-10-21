@@ -70,6 +70,14 @@ Content-Type: application/json
   "rating": 1
 }
 
+POST http://localhost:8000/user/opp
+Content-Type: application/json
+
+{
+  "user_id": "asdf",
+  "opp_id": 1
+}
+
 GET http://localhost:8000/user/asdf/opps
 GET http://localhost:8000/user/cl7k1si8s0049kcpnzvou9sfk/opps
 

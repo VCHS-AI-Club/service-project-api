@@ -111,11 +111,9 @@ async def get_user_inverse_opps(
                     )).scalars()
                 )
             )
-            # .options(selectinload(UserOppAssociation.opp))
-            # .distinct(UserOppAssociatopp_idn.opp_id)
         )
     ).scalars()
-    return [i.id for i in inverse_opp_associations]
+    return list(inverse_opp_associations)
 
 
 @user_router.post("/opp")
