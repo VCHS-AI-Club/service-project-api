@@ -60,6 +60,8 @@ alembic upgrade head
 - [ ] switch unix timestamps to postgres's TIMESTAMPZ
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 
+- [ ] add a `_deleted` flag to db
+
 ### Done
 
 - [x] get, create, update, delete users
