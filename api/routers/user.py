@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import delete, insert, select, update
+from sqlalchemy import and_, delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
@@ -104,11 +104,13 @@ async def get_user_inverse_opps(
         await db.execute(
             select(Opp).where(
                 Opp.id.not_in(
-                    (await db.execute(
-                        select(UserOppAssociation.opp_id).where(
-                            UserOppAssociation.user_id == id
+                    (
+                        await db.execute(
+                            select(UserOppAssociation.opp_id).where(
+                                UserOppAssociation.user_id == id
+                            )
                         )
-                    )).scalars()
+                    ).scalars()
                 )
             )
         )
@@ -123,3 +125,25 @@ async def add_opp(asc: AssociationT, db: AsyncSession = Depends(get_db)):  # noq
     # asc = UserOppAssociation(user_id=asc.user_id, opp_id=asc.opp_id)
     # print(asc)
     # await db.merge(asc)
+
+
+@user_router.delete("/{user_id}/opp/{opp_id}")
+async def remove_opp(user_id: str, opp_id: int, db: AsyncSession = Depends(get_db)):
+    """Remove an opp from a user."""
+    print("removing opp")
+    opp = (
+        await db.execute(
+            select(UserOppAssociation).where(
+                (UserOppAssociation.user_id == user_id)
+                & (UserOppAssociation.opp_id == opp_id)
+            )
+        )
+    ).scalar()
+    print("opp", opp)
+    await db.execute(
+        delete(UserOppAssociation).where(
+            (UserOppAssociation.user_id == user_id)
+            & (UserOppAssociation.opp_id == opp_id)
+        )
+    )
+    return opp

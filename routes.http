@@ -75,12 +75,13 @@ Content-Type: application/json
 
 {
   "user_id": "asdf",
-  "opp_id": 1
+  "opp_id": 2
 }
 
+
+DELETE http://localhost:8000/user/asdf/opp/2
+
 GET http://localhost:8000/user/asdf/opps
-GET http://localhost:8000/user/cl7k1si8s0049kcpnzvou9sfk/opps
 
 GET http://localhost:8000/user/asdf/inverse_opps
-GET http://localhost:8000/user/cl7k1si8s0049kcpnzvou9sfk/inverse_opps
 
