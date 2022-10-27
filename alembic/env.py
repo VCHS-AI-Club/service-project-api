@@ -1,11 +1,13 @@
 import asyncio
 from logging.config import fileConfig
+import os
 
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from alembic import context
+from api.db import CONNECTION_STRING, format_db_url
 from api.schemas import Base
 
 # this is the Alembic Config object, which provides
@@ -67,6 +69,8 @@ async def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+
+    config.set_main_option("sqlalchemy.url", CONNECTION_STRING)
     connectable = AsyncEngine(
         engine_from_config(
             config.get_section(config.config_ini_section, {}),
