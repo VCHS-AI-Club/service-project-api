@@ -47,16 +47,35 @@ alembic upgrade head
 <https://docs.sqlalchemy.org/en/14/orm/queryguide.html>
 <https://docs.sqlalchemy.org/en/14/tutorial/orm_data_manipulation.html>
 
+### Docker
+
+```bash
+docker build -t fastapi .
+docker run -d --name ai-service-project-api -p 8080:80 fastapi
+```
+
+If the docker file is changed
+
+```bash
+docker ps -a
+docker stop <id>
+docker rm <id>
+
+docker build -t fastapi .
+docker run -d --name ai-service-project-api -p 8080:80 fastapi
+```
+
+
 ## TODO
 
 ### URGENT
 
-- [ ] Fix schema recursion error ./api/routers/user.py:78
+- [x] Fix schema recursion error ./api/routers/user.py:78
 
 ### Current
 
 - [ ] switch PUT routes to PATCH
-- [ ] add real opportunity models
+- [x] add real opportunity models
 - [ ] switch unix timestamps to postgres's TIMESTAMPZ
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 

@@ -3,5 +3,9 @@ fastapi_utils
 uvicorn
 
 sqlalchemy
+sqlalchemy-cockroachdb
 alembic
 asyncpg
+psycopg2-binary  # required by cockroachdb
+
+python-dotenv
