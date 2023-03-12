@@ -62,10 +62,10 @@ class Opp(Base):
     desc = Column(String, nullable=False)
     isChurch = Column(Boolean, nullable=False)
     contact = Column(String, nullable=True)
-    website = Column(String, nullable=True)
+    url = Column(String, nullable=True)
 
     # Location as lat long coordinates
-    lat = Column(Float, nullable=False)
+    location = Column(String, nullable=False)
     lon = Column(Float, nullable=False)
 
     # Start and end times as UTC timestamps

@@ -65,17 +65,17 @@ docker build -t fastapi .
 docker run -d --name ai-service-project-api -p 8080:80 fastapi
 ```
 
-
 ## TODO
 
 ### URGENT
 
-- [x] Fix schema recursion error ./api/routers/user.py:78
+- [ ] sync types with FE
+- [ ] switch db provider
 
 ### Current
 
+- [ ] add real opportunity models
 - [ ] switch PUT routes to PATCH
-- [x] add real opportunity models
 - [ ] switch unix timestamps to postgres's TIMESTAMPZ
 - [ ] handle database errors better <https://fastapi.tiangolo.com/tutorial/handling-errors/>
 
@@ -83,6 +83,7 @@ docker run -d --name ai-service-project-api -p 8080:80 fastapi
 
 ### Done
 
+- [x] Fix schema recursion error ./api/routers/user.py:78
 - [x] get, create, update, delete users
 
 - [x] get, create, update, delete tags
